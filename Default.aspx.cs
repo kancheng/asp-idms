@@ -12,9 +12,14 @@ public partial class _Default : System.Web.UI.Page
 {
     static double[] Product = new double[50];
 
+	static double instmrd, mfytmrd, quytmrd, deltmrd;
 
     static _Default()
     {
+    	instmrd = 0; 
+    	mfytmrd = 0;
+    	quytmrd = 0;
+    	deltmrd = 0;
         Product[0] = 2.98;
         Product[1] = 4.50;
         Product[2] = 9.98;
@@ -117,7 +122,7 @@ public partial class _Default : System.Web.UI.Page
         {
             Button btn = (Button)sender;
 
-
+            string mfytmrdstr, instmrdstr;
 
             double tminumber, tmmnumber, tmsnumber, tmdnumber;
             double tmiprice, tmmprice;
@@ -135,7 +140,16 @@ public partial class _Default : System.Web.UI.Page
                 Session["mfid"] = mftxtid.Text;
                 Session["mfct"] = mftxtnm.Text;
                 Session["seid"] = septxtid.Text;
-                Session["deid"] = deletxtid.Text;
+				Session["deid"] = deletxtid.Text;
+                
+                mfytmrdstr = Convert.ToString(mfytmrd);
+                instmrdstr = Convert.ToString(instmrd);
+
+                Response.Cookies["idms"]["modify"] = Server.UrlEncode(mfytmrdstr);
+                Response.Cookies["idms"]["insert"] = Server.UrlEncode(instmrdstr);
+
+                Session["searchmrd"] = quytmrd;
+                Session["deletemrd"] = deltmrd;
                 Response.Redirect("Default2.aspx");
             }
 
@@ -149,6 +163,7 @@ public partial class _Default : System.Web.UI.Page
                     tmmnumber = Convert.ToDouble(strmtnb);
                     tmmprice = Convert.ToDouble(strmtprc);
                     Label1.Text = Convert.ToString("Modify Data : " + modifyPrice(tmmnumber, tmmprice));
+
                     Panel2.Visible = false;
                     Panel3.Visible = false;
                 }
@@ -176,6 +191,7 @@ public partial class _Default : System.Web.UI.Page
                     tminumber = Convert.ToDouble(stritnb);
                     tmiprice = Convert.ToDouble(stritprc);
                     Label1.Text = Convert.ToString("Insert Data : " + insertPrice(tminumber, tmiprice));
+
                     Panel2.Visible = false;
                     Panel3.Visible = false;
                 }
@@ -201,6 +217,7 @@ public partial class _Default : System.Web.UI.Page
                 {
                     tmsnumber = Convert.ToDouble(strstnb);
                     Label1.Text = Convert.ToString("Query Data : " + queryPrice(tmsnumber));
+
                     Panel2.Visible = false;
                     Panel3.Visible = false;
                 }
@@ -227,6 +244,7 @@ public partial class _Default : System.Web.UI.Page
                 {
                     tmdnumber = Convert.ToDouble(strdtnb);
                     Label1.Text = Convert.ToString("Delete Data : " + deletePrice(tmdnumber));
+
                     Panel2.Visible = false;
                     Panel3.Visible = false;
                 }
@@ -249,6 +267,9 @@ public partial class _Default : System.Web.UI.Page
     double deletePrice(double number)
     {
         int mnub = Convert.ToInt32(number);
+
+		deltmrd = deltmrd + 1;
+
         double idex = 0;
         if (Product[mnub] > 0)
         {
@@ -262,6 +283,9 @@ public partial class _Default : System.Web.UI.Page
     double queryPrice(double number)
     {
         int mnub = Convert.ToInt32(number);
+
+		quytmrd = quytmrd + 1;
+
         double idex = 0;
         if (Product[mnub] > 0)
         {
@@ -275,6 +299,9 @@ public partial class _Default : System.Web.UI.Page
 
     {
         int mnub = Convert.ToInt32(number);
+
+		mfytmrd = mfytmrd + 1;
+
         double idex = txtdata;
         if (Product[mnub] > 0)
         {
@@ -289,6 +316,9 @@ public partial class _Default : System.Web.UI.Page
     double insertPrice(double number, double txtdata)
     {
         int mnub = Convert.ToInt32(number);
+
+		instmrd = instmrd + 1;
+
         if (Product[mnub] == 0)
         {
             Product[mnub] = txtdata;
